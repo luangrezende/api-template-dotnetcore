@@ -2,8 +2,9 @@
 using Template.Project.Domain.RepositoriesContracts.IBase;
 using Template.Project.Domain.Application.Dtos.Requests;
 using Template.Project.Infrastructure.Repositories.Base;
+using Template.Project.Application.CustomExceptions;
 using Template.Project.Domain.Domain.Models;
-using Microsoft.EntityFrameworkCore;
+using Template.Project.Util.Cryptograph;
 using System.Threading.Tasks;
 
 namespace Template.Project.Domain.Infrastructure.Repositories
@@ -19,8 +20,13 @@ namespace Template.Project.Domain.Infrastructure.Repositories
 
         public async Task<UserEntity> GetByCredentialsAsync(AuthReadRequest authReadRequest)
         {
-            return await _context.Db.Set<UserEntity>()
-                .FirstOrDefaultAsync(x => x.Username == authReadRequest.Username && x.Password == authReadRequest.Password);
+            var user =
+                await _context.Db.Set<UserEntity>()
+                .FindAsync(authReadRequest.Username);
+
+            return Crypt.PasswordVerify(authReadRequest.Password, user.Password)
+                ? user
+                : throw new NotFoundException("Invalid username or password");
         }
     }
 }

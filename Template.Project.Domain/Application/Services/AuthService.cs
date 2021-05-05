@@ -5,10 +5,12 @@ using Template.Project.Domain.Application.Dtos.Requests;
 using Template.Project.Application.CustomExceptions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
+using Template.Project.Util.Models;
 using Template.Project.Util.Auth;
 using System.Threading.Tasks;
 using System.Text;
 using AutoMapper;
+using Template.Project.Domain.Domain.Models;
 
 namespace Template.Project.Domain.Application.Services
 {
@@ -29,17 +31,17 @@ namespace Template.Project.Domain.Application.Services
 
         public async Task<AuthResponse> AuthAndGenerateToken(AuthReadRequest authReadRequest)
         {
-            var userResponse =
+            UserResponse userResponse =
                 await GetUser(authReadRequest);
 
-            if (userResponse == null)
-                throw new NotFoundException("Invalid username or password");
-
-            var secret =
+            string secret =
                 _configuration["Authentication:Secret"];
 
-            var tokenBuilded =
-                TokenBuilder.BuildToken(userResponse.UserID, userResponse.Email, secret);
+            UserResponseUtil userToUserUtil =
+                _mapper.Map<UserResponseUtil>(userResponse);
+
+            string tokenBuilded =
+                TokenBuilder.BuildToken(userToUserUtil, secret);
 
             return new AuthResponse
             {
@@ -53,7 +55,7 @@ namespace Template.Project.Domain.Application.Services
 
         private async Task<UserResponse> GetUser(AuthReadRequest authReadRequest)
         {
-            //var user = 
+            //UserEntity user =
             //    await _userRepository.GetByCredentialsAsync(authReadRequest);
 
             //return _mapper.Map<UserResponse>(user);
@@ -64,7 +66,7 @@ namespace Template.Project.Domain.Application.Services
                 Name = "batman",
                 Email = "batman@gmail.com",
                 Username = "batman",
-                Role = "admin"
+                Role = "Admin"
             };
         }
     }

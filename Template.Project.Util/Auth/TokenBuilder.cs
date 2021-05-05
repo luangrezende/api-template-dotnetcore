@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
+using Template.Project.Util.Models;
 using System.Security.Claims;
 using System.Text;
 using System;
@@ -8,12 +9,13 @@ namespace Template.Project.Util.Auth
 {
     public class TokenBuilder
     {
-        public static string BuildToken(string userID, string email, string secret)
+        public static string BuildToken(UserResponseUtil userResponseUtil, string secret)
         {
             var claims = new Claim[]
             {
-                new Claim(JwtRegisteredClaimNames.UniqueName, userID),
-                new Claim(JwtRegisteredClaimNames.Email, email),
+                new Claim(JwtRegisteredClaimNames.UniqueName, userResponseUtil.UserID),
+                new Claim(JwtRegisteredClaimNames.Email, userResponseUtil.Email),
+                new Claim(ClaimTypes.Role, userResponseUtil.Role)
                 //new Claim(JwtRegisteredClaimNames.Iss, key),
             };
 

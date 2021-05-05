@@ -30,10 +30,16 @@ namespace Template.Project.WebApi.Controllers
             _logger = logger;
         }
 
+        /// <summary>
+        /// Authenticate and generate token
+        /// </summary>
         [HttpPost]
         [AllowAnonymous]
         [Route("Login")]
-        public async Task<ActionResult<AuthResponse>> Authenticate([FromBody] AuthReadRequest authReadRequest)
+        [Produces("application/json")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<AuthResponse>> Login([FromBody] AuthReadRequest authReadRequest)
         {
             try
             {

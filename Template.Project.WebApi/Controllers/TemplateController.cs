@@ -33,8 +33,9 @@ namespace Template.Project.WebApi.Controllers
         /// <summary>
         /// Do something here
         /// </summary>
-        [HttpGet]
+        [HttpPost]
         [Authorize]
+        [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<TemplateResponse>>> Get([FromQuery] TemplateReadRequest templateReadRequest)
