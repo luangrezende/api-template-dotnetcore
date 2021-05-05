@@ -2,6 +2,7 @@
 using Template.Project.Domain.Application.Dtos.Responses;
 using Template.Project.Domain.Application.Dtos.Requests;
 using Template.Project.Application.CustomExceptions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
@@ -30,9 +31,10 @@ namespace Template.Project.WebApi.Controllers
         }
 
         /// <summary>
-        /// Do something good hehe
+        /// Do something here
         /// </summary>
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<IEnumerable<TemplateResponse>>> Get([FromQuery] TemplateReadRequest templateReadRequest)

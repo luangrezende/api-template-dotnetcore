@@ -2,63 +2,68 @@
 using Template.Project.Domain.Domain.RepositoriesContracts;
 using Template.Project.Domain.Application.Dtos.Responses;
 using Template.Project.Domain.Application.Dtos.Requests;
+using Template.Project.Application.CustomExceptions;
 using Microsoft.Extensions.Configuration;
-using System.IdentityModel.Tokens.Jwt;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Logging;
+using Template.Project.Util.Auth;
 using System.Threading.Tasks;
-using System.Security.Claims;
 using System.Text;
 using AutoMapper;
-using System;
 
 namespace Template.Project.Domain.Application.Services
 {
     public class AuthService : IAuthService
     {
-        private readonly IAuthRepository _authRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public AuthService(IAuthRepository authRepository, IConfiguration configuration, IMapper mapper, ILogger<AuthService> logger)
+        public AuthService(IUserRepository userRepository, IConfiguration configuration, IMapper mapper, ILogger<AuthService> logger)
         {
-            _authRepository = authRepository;
+            _userRepository = userRepository;
             _configuration = configuration;
             _mapper = mapper;
             _logger = logger;
         }
 
-        public async Task<TokenResponse> GenerateToken(UserResponse userResponse)
+        public async Task<AuthResponse> AuthAndGenerateToken(AuthReadRequest authReadRequest)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration.GetSection("Authentication").GetSection("Secret").Value);
-            var tokenDescriptor = new SecurityTokenDescriptor
+            var userResponse =
+                await GetUser(authReadRequest);
+
+            if (userResponse == null)
+                throw new NotFoundException("Invalid username or password");
+
+            var secret =
+                _configuration["Authentication:Secret"];
+
+            var tokenBuilded =
+                TokenBuilder.BuildToken(userResponse.UserID, userResponse.Email, secret);
+
+            return new AuthResponse
             {
-                Subject = new ClaimsIdentity(new Claim[]
+                User = userResponse,
+                Token = new TokenResponse
                 {
-                    new Claim(ClaimTypes.Name, userResponse.Name),
-                    new Claim(ClaimTypes.Role, userResponse.Role)
-                }),
-                Expires = DateTime.UtcNow.AddHours(2),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+                    Token = tokenBuilded
+                }
             };
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-
-            var tokenResponse = new TokenResponse
-            {
-                Token = tokenHandler.WriteToken(token)
-            };
-
-            return tokenResponse;
         }
 
-        public async Task<UserResponse> GetUser(AuthReadRequest authReadRequest)
+        private async Task<UserResponse> GetUser(AuthReadRequest authReadRequest)
         {
-            return new UserResponse 
+            //var user = 
+            //    await _userRepository.GetByCredentialsAsync(authReadRequest);
+
+            //return _mapper.Map<UserResponse>(user);
+
+            return new UserResponse
             {
-                Name =  "batman",
-                Username =  "batman",
+                UserID = "batman999999",
+                Name = "batman",
+                Email = "batman@gmail.com",
+                Username = "batman",
                 Role = "admin"
             };
         }

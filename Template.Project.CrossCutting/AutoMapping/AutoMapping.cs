@@ -1,5 +1,4 @@
-﻿using Template.Project.Domain.Application.Dtos.Requests;
-using Template.Project.Domain.Application.Dtos.Responses;
+﻿using Template.Project.Domain.Application.Dtos.Responses;
 using Microsoft.Extensions.DependencyInjection;
 using Template.Project.Domain.Domain.Models;
 using AutoMapper;
@@ -13,6 +12,7 @@ namespace Template.Project.CrossCutting.AutoMapping
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<TemplateEntity, TemplateResponse>().ReverseMap();
+                cfg.CreateMap<UserEntity, UserResponse>().ReverseMap();
             });
 
             IMapper mapper = config.CreateMapper();

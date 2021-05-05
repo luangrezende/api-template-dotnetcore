@@ -4,6 +4,7 @@ using Template.Project.Infrastructure.DBContext;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Template.Project.CrossCutting.DI;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,38 +13,35 @@ using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Http;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
+using System.Text;
 using System.IO;
 using System;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
 
 namespace Template.Project
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
-
         public void ConfigureServices(IServiceCollection services)
         {
-            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("Authentication").GetSection("Secret").Value);
-
             services.AddControllers()
                 .AddFluentValidation();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<DBContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ConnectionName")));
+                .AddDbContext<DBContext>(options => options.UseNpgsql(Configuration.GetConnectionString("NoSQL")));
             services.AddServices();
             services.AddRepositories();
             services.AddValidations();
             services.AddAutoMapping();
             services.AddCors();
 
-            services.AddSwaggerGen(c =>
+            
+                services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
@@ -55,7 +53,7 @@ namespace Template.Project
                     //{
                     //    Name = "Contact Name",
                     //    Email = string.Empty,
-                    //    Url = new Uri("https://google.com"),
+                    //    Url = new Uri("https://example.com"),
                     //},
                     //License = new OpenApiLicense
                     //{
@@ -80,12 +78,13 @@ namespace Template.Project
                 x.SaveToken = true;
                 x.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateAudience = false,
                     ValidateIssuer = false,
-                    ValidateAudience = false
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:Secret"]))
                 };
-            }); 
+            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -95,14 +94,18 @@ namespace Template.Project
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseAuthentication();
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
-            app.UseAuthentication();
             app.UseCors(x => x
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.UseSwagger(c =>
             {
@@ -114,11 +117,6 @@ namespace Template.Project
                 c.SwaggerEndpoint("/api/template/swagger/v1/swagger.json", "Template API v1");
                 c.RoutePrefix = "api/template/swagger";
                 c.DocumentTitle = "Template API - v1";
-            });
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
             });
         }
     }
