@@ -4,22 +4,22 @@ Parameters:
   RepositoryName:
     Type: String
     Default: 'api-template'
-    Description: 'Nome do repositório para as imagens.'
+    Description: 'Image repositories name.'
 
   ProjectName:
     Type: String
     Default: 'API Template'
-    Description: 'Nome do projeto.'
+    Description: 'Project name.'
 
   ProjectCategory:
     Type: String
     Default: 'Template / API'
-    Description: 'Categoria do projeto ex: API / Auth.'
+    Description: 'Project category ex: API / Auth.'
 
   ProjectMainAccount:
     Type: String
     Default: 'squad-name'
-    Description: 'Nome da conta principal responsável por centralizar "billing" do projeto.'
+    Description: 'Principal account name to center the "billing" of the project.'
 
 Resources:
   Registry:
@@ -43,7 +43,7 @@ Resources:
             Effect: Allow
             Principal:
               AWS: 
-                - arn:aws:iam::603123380739:root
+                - arn:aws:iam::99999999999:root
             Action:
               - ecr:GetDownloadUrlForLayer
               - ecr:BatchGetImage
@@ -54,7 +54,7 @@ Resources:
             "rules": [
               {
                 "rulePriority": 1,
-                "description": "Remove as imagens mais antigas",
+                "description": "Remove the last images",
                 "selection": {
                   "tagStatus": "any",
                   "countType": "imageCountMoreThan",

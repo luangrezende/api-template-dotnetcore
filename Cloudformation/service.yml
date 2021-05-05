@@ -24,11 +24,11 @@ Parameters:
 
   ImageUrl:
     Type: String
-    Default: '603123380739.dkr.ecr.us-east-1.amazonaws.com/api-template:latest'
+    Default: 'url-server/api-template:latest'
 
   LoadBalancerArn:
     Type: String
-    Default: 'arn:aws:elasticloadbalancing:us-east-1:603123380739:loadbalancer/app/api-template/493fb418ef23d58f'
+    Default: 'url-loadbalancer/api-template'
 
   PathApi:
     Type: String
@@ -68,7 +68,7 @@ Parameters:
 
   VPCId:
     Type: String
-    Default: 'vpc-0c2cbd7c4142c758f'
+    Default: 'vpc-id'
 
 Resources:
   TaskDefinition:
@@ -94,8 +94,8 @@ Resources:
           DnsSearchDomains:
             - hsl.pvt
           DnsServers:
-            - "10.132.0.21"
-            - "10.132.0.45"
+            - "10.999.0.99"
+            - "10.999.0.99"
 
   ServiceApi:
     Type: AWS::ECS::Service
