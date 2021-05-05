@@ -1,0 +1,142 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  DeployId:
+    Type: String
+
+  ClusterName:
+    Type: String
+    Default: api-cluster
+
+  ServiceName:
+    Type: String
+    Default: api-template
+    Description: A name for the service.
+
+  ServiceTaskName:
+    Type: String
+    Default: api-template
+    Description: Name for task.
+
+  ServiceTaskContainerName:
+    Type: String
+    Default: api-template
+    Description: Name Container for task.
+
+  ImageUrl:
+    Type: String
+    Default: '603123380739.dkr.ecr.us-east-1.amazonaws.com/api-template:latest'
+
+  LoadBalancerArn:
+    Type: String
+    Default: 'arn:aws:elasticloadbalancing:us-east-1:603123380739:loadbalancer/app/api-template/493fb418ef23d58f'
+
+  PathApi:
+    Type: String
+    Default: /api-template-path/
+
+  Env:
+    Type: String
+    Default: 'development'
+
+  EnvPort:
+    Type: String
+    Default: '3001'
+ 
+  EnvHOST:
+    Type: String
+    Default: 'http://+:3001'
+
+  ContainerPort:
+    Type: Number
+    Default: 44360
+
+  ContainerCpu:
+    Type: Number
+    Default: 256
+
+  ContainerMemory:
+    Type: Number
+    Default: 256
+
+  Priority:
+    Type: Number
+    Default: 1
+
+  DesiredCount:
+    Type: Number
+    Default: 1
+
+  VPCId:
+    Type: String
+    Default: 'vpc-0c2cbd7c4142c758f'
+
+Resources:
+  TaskDefinition:
+    Type: AWS::ECS::TaskDefinition
+    Properties:
+      Family: !Join ['-', [!Ref 'ServiceTaskName', 'api']]
+      Cpu: !Ref 'ContainerCpu'
+      Memory: !Ref 'ContainerMemory'
+
+      ContainerDefinitions:
+        - Name: !Join ['-', [!Ref 'ServiceTaskContainerName', 'api']]
+          Image: !Ref 'ImageUrl'
+          PortMappings:
+            - ContainerPort: !Ref 'EnvPort'
+          Environment:
+            - Name: ENV
+              Value: !Ref 'Env'
+            - Name: ASPNETCORE_URLS
+              Value: !Ref 'EnvHOST'
+            - Name: DEPLOY_ID
+              Value: !Ref 'DeployId'
+
+          DnsSearchDomains:
+            - hsl.pvt
+          DnsServers:
+            - "10.132.0.21"
+            - "10.132.0.45"
+
+  ServiceApi:
+    Type: AWS::ECS::Service
+    DependsOn: LoadBalancerRule
+    Properties:
+      ServiceName: !Join ['-', [!Ref 'ServiceName', 'api-service']]
+      Cluster: !Ref 'ClusterName'
+      DeploymentConfiguration:
+        MaximumPercent: 200
+        MinimumHealthyPercent: 75
+      DesiredCount: !Ref 'DesiredCount'
+      TaskDefinition: !Ref 'TaskDefinition'
+      LoadBalancers:
+        - ContainerName: !Join ['-', [!Ref 'ServiceTaskContainerName', 'api']]
+          ContainerPort: !Ref 'EnvPort'
+          TargetGroupArn: !Ref 'TargetGroup'
+
+  TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckIntervalSeconds: 6
+      HealthCheckPath: /api/healthcheck
+      HealthCheckProtocol: HTTP
+      HealthCheckTimeoutSeconds: 5
+      HealthyThresholdCount: 2
+      Name: !Join ['-', [!Ref 'ServiceName', 'api-service']]
+      Port: 80
+      Protocol: HTTP
+      UnhealthyThresholdCount: 2
+      VpcId: !Ref 'VPCId'
+      Matcher:
+        HttpCode: '200'
+
+  LoadBalancerRule:
+    Type: AWS::ElasticLoadBalancingV2::ListenerRule
+    Properties:
+      Actions:
+        - TargetGroupArn: !Ref 'TargetGroup'
+          Type: 'forward'
+      Conditions:
+        - Field: path-pattern
+          Values: [!Ref 'PathApi']
+      ListenerArn: !Ref 'LoadBalancerArn'
+      Priority: !Ref 'Priority'

@@ -1,0 +1,39 @@
+﻿apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: template-project
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: template-project
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 33%      
+  template:
+    metadata:
+      labels:
+        app: template-project
+    spec:
+      containers:
+      - name: template-project
+        image: app-template/template-project-api:<VERSION>   
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: template-project
+  labels:
+    app: template-project
+spec:
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+  selector:
+    app: template-project

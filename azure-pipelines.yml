@@ -1,0 +1,64 @@
+trigger:
+  - refs/tags/v*
+  - develop
+  - feature/*
+  - release/*
+  - hotfix/*
+  - master
+  - main
+
+variables:
+  IMAGE_TAG_NAME: $(Build.SourceBranchName)
+  STACK_NAME: container-registry-consulta-anvisa-api
+  REPOSITORY_NAME: 'consulta-anvisa-api'
+
+pool:
+  name: 'pool-for-aws'
+
+stages:
+
+- stage: infrastructure
+  displayName: Infrastructure
+
+  jobs: 
+    - job: CloudFormationRegistry
+      steps:
+        - task: CloudFormationCreateOrUpdateStack@1
+          inputs:
+            awsCredentials: 'Ciclo Receita - DEV'
+            regionName: 'us-east-1'
+            stackName: $(STACK_NAME)
+            templateSource: 'file'
+            templateFile: 'cloudformation/registry.yml'
+          displayName: 'CloudFormation Registry'
+
+- stage: build
+  displayName: Build
+
+  jobs:
+    - job: Application
+      steps:
+        - task: Docker@2
+          inputs:
+            repository: $(REPOSITORY_NAME)
+            command: 'build'
+            Dockerfile: 'Dockerfile'
+            tags: 'latest'
+          displayName: 'build API image'
+
+        - task: ECRPushImage@1
+          inputs:
+            awsCredentials: 'Ciclo Receita - DEV'
+            sourceImageName: $(REPOSITORY_NAME)
+            repositoryName:  $(REPOSITORY_NAME)
+            pushTag: $(IMAGE_TAG_NAME)
+          displayName: 'push API image'
+
+  # Stage publish
+- stage: Publish
+  displayName: Publish
+  jobs:
+  - job: API
+    steps:
+    - publish: $(System.DefaultWorkingDirectory)/cloudformation
+      artifact: $(Build.Repository.Name)

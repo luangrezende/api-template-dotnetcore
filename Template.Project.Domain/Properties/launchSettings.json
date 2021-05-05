@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "Template.Project.Domain": {
+      "commandName": "Project"
+    }
+  }
+}

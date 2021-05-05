@@ -1,0 +1,21 @@
+AWSTemplateFormatVersion: '2010-09-09'
+
+Parameters:
+  TableNamespace:
+    Type: 'String'
+    Default: 'template'
+
+Resources:
+  DBLogs:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Join ['_', [!Ref 'TableNamespace', 'logs']]
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      ProvisionedThroughput:
+        ReadCapacityUnits: 1
+        WriteCapacityUnits: 1

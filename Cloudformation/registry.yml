@@ -1,0 +1,68 @@
+# Create or update ECR registry for images Docker
+AWSTemplateFormatVersion: '2010-09-09'
+Parameters:
+  RepositoryName:
+    Type: String
+    Default: 'api-template'
+    Description: 'Nome do repositório para as imagens.'
+
+  ProjectName:
+    Type: String
+    Default: 'API Template'
+    Description: 'Nome do projeto.'
+
+  ProjectCategory:
+    Type: String
+    Default: 'Template / API'
+    Description: 'Categoria do projeto ex: API / Auth.'
+
+  ProjectMainAccount:
+    Type: String
+    Default: 'squad-name'
+    Description: 'Nome da conta principal responsável por centralizar "billing" do projeto.'
+
+Resources:
+  Registry:
+    Type: AWS::ECR::Repository
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Ref 'ProjectName'
+        - Key: MainAccount
+          Value: !Ref 'ProjectMainAccount'
+        - Key: Category
+          Value: !Ref 'ProjectCategory'
+
+      RepositoryName: !Ref 'RepositoryName'
+
+      RepositoryPolicyText:
+        Version: "2012-10-17"
+        Statement:
+          - 
+            Sid: AllowPull
+            Effect: Allow
+            Principal:
+              AWS: 
+                - arn:aws:iam::603123380739:root
+            Action:
+              - ecr:GetDownloadUrlForLayer
+              - ecr:BatchGetImage
+
+      LifecyclePolicy:
+        LifecyclePolicyText: |
+          {
+            "rules": [
+              {
+                "rulePriority": 1,
+                "description": "Remove as imagens mais antigas",
+                "selection": {
+                  "tagStatus": "any",
+                  "countType": "imageCountMoreThan",
+                  "countNumber": 6
+                },
+                "action": {
+                  "type": "expire"
+                }
+              }
+            ]
+          }

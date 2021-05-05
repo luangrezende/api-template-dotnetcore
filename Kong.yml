@@ -1,0 +1,12 @@
+apiVersion: extensions/v1
+kind: Ingress
+metadata:
+  name: app-template
+spec:
+  rules:
+  - http:
+      paths:     
+      - path: /api/template
+        backend:
+          serviceName: template-app
+          servicePort: 80
