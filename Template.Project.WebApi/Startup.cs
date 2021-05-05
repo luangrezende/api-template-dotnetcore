@@ -1,4 +1,5 @@
-﻿using Template.Project.CrossCutting.AutoMapping;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Template.Project.CrossCutting.AutoMapping;
 using Template.Project.Infrastructure.DBContext;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
@@ -13,6 +14,8 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.IO;
 using System;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Template.Project
 {
@@ -27,8 +30,18 @@ namespace Template.Project
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var key = Encoding.ASCII.GetBytes(Configuration.GetSection("Authentication").GetSection("Secret").Value);
+
             services.AddControllers()
                 .AddFluentValidation();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddEntityFrameworkNpgsql()
+                .AddDbContext<DBContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ConnectionName")));
+            services.AddServices();
+            services.AddRepositories();
+            services.AddValidations();
+            services.AddAutoMapping();
+            services.AddCors();
 
             services.AddSwaggerGen(c =>
             {
@@ -56,14 +69,23 @@ namespace Template.Project
                 c.IncludeXmlComments(xmlPath);
             });
 
-            services.AddEntityFrameworkNpgsql()
-                .AddDbContext<DBContext>(options => options.UseNpgsql(Configuration.GetConnectionString("ConnectionName")));
-
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddServices();
-            services.AddRepositories();
-            services.AddValidations();
-            services.AddAutoMapping();
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            }); 
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -76,6 +98,11 @@ namespace Template.Project
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
+            app.UseAuthentication();
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
 
             app.UseSwagger(c =>
             {

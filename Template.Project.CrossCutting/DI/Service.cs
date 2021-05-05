@@ -9,6 +9,7 @@ namespace Template.Project.CrossCutting.DI
         public static IServiceCollection AddServices(this IServiceCollection services)
         {
             services.AddScoped<ITemplateService, TemplateService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             return services;
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Template.Project.WebApi.Controllers
@@ -14,6 +15,7 @@ namespace Template.Project.WebApi.Controllers
         /// <response code="400">Off-line</response>   
         /// <response code="404">Off-line or endpoint not found</response>   
         [HttpGet]
+        [Authorize]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

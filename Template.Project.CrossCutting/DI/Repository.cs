@@ -12,6 +12,7 @@ namespace Template.Project.CrossCutting.DI
         {
             repository.AddScoped<ISystemContext, DBContext>();
             repository.AddScoped<ITemplateRepository, TemplateRepository>();
+            repository.AddScoped<IAuthRepository, AuthRepository>();
 
             return repository;
         }
