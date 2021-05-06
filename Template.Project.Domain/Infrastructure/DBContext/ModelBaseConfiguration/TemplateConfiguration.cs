@@ -1,5 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Template.Project.Domain.Domain.Models;
+using Template.Project.Domain.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Template.Project.Infrastructure.DBContext.ModelBaseConfiguration

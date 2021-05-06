@@ -1,6 +1,6 @@
 ﻿using Template.Project.Infrastructure.DBContext.ModelBaseConfiguration;
 using Template.Project.Domain.RepositoriesContracts.IBase;
-using Template.Project.Domain.Domain.Models;
+using Template.Project.Domain.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Template.Project.Infrastructure.DBContext

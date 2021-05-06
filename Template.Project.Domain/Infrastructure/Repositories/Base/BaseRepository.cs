@@ -1,5 +1,5 @@
 ﻿using Template.Project.Domain.RepositoriesContracts.IBase;
-using Template.Project.Domain.Models.Base;
+using Template.Project.Domain.Entities.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;

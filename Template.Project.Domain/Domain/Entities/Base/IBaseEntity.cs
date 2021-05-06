@@ -1,4 +1,4 @@
-﻿namespace Template.Project.Domain.Models.Base
+﻿namespace Template.Project.Domain.Entities.Base
 {
     public interface IBaseEntity
     {        

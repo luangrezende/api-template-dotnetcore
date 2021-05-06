@@ -15,8 +15,7 @@ namespace Template.Project.WebApi.Controllers
         /// <response code="400">Off-line</response>   
         /// <response code="404">Off-line or endpoint not found</response>   
         [HttpGet]
-        //[AllowAnonymous]
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

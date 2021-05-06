@@ -1,6 +1,6 @@
 ﻿using Template.Project.Domain.RepositoriesContracts.IBase;
 using Template.Project.Domain.Application.Dtos.Requests;
-using Template.Project.Domain.Domain.Models;
+using Template.Project.Domain.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

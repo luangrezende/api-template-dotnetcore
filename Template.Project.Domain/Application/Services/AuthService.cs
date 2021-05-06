@@ -2,15 +2,13 @@
 using Template.Project.Domain.Domain.RepositoriesContracts;
 using Template.Project.Domain.Application.Dtos.Responses;
 using Template.Project.Domain.Application.Dtos.Requests;
-using Template.Project.Application.CustomExceptions;
+using Template.Project.Domain.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Template.Project.Util.Models;
 using Template.Project.Util.Auth;
 using System.Threading.Tasks;
-using System.Text;
 using AutoMapper;
-using Template.Project.Domain.Domain.Models;
 
 namespace Template.Project.Domain.Application.Services
 {
@@ -55,19 +53,19 @@ namespace Template.Project.Domain.Application.Services
 
         private async Task<UserResponse> GetUser(AuthReadRequest authReadRequest)
         {
-            //UserEntity user =
-            //    await _userRepository.GetByCredentialsAsync(authReadRequest);
+            UserEntity user =
+                await _userRepository.GetByCredentialsAsync(authReadRequest);
 
-            //return _mapper.Map<UserResponse>(user);
+            return _mapper.Map<UserResponse>(user);
 
-            return new UserResponse
-            {
-                UserID = "batman999999",
-                Name = "batman",
-                Email = "batman@gmail.com",
-                Username = "batman",
-                Role = "Admin"
-            };
+            //return new UserResponse
+            //{
+            //    UserID = "batman999999",
+            //    Name = "batman",
+            //    Email = "batman@gmail.com",
+            //    Username = "batman",
+            //    Role = "Admin"
+            //};
         }
     }
 }

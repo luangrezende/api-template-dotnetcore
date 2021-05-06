@@ -1,6 +1,6 @@
 ﻿using Template.Project.Domain.Application.Dtos.Responses;
 using Microsoft.Extensions.DependencyInjection;
-using Template.Project.Domain.Domain.Models;
+using Template.Project.Domain.Domain.Entities;
 using Template.Project.Util.Models;
 using AutoMapper;
 

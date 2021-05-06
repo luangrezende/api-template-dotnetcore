@@ -21,10 +21,11 @@ namespace Template.Project
 {
     public class Startup
     {
-        public IConfiguration Configuration { get; }
+        public IConfiguration _configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
@@ -33,7 +34,7 @@ namespace Template.Project
                 .AddFluentValidation();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddEntityFrameworkNpgsql()
-                .AddDbContext<DBContext>(options => options.UseNpgsql(Configuration.GetConnectionString("NoSQL")));
+                .AddDbContext<DBContext>(options => options.UseNpgsql(_configuration.GetConnectionString("NoSQL")));
             services.AddServices();
             services.AddRepositories();
             services.AddValidations();
@@ -82,7 +83,7 @@ namespace Template.Project
                     ValidateIssuer = false,
                     ValidateLifetime = true,
                     ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Authentication:Secret"]))
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Authentication:Secret"]))
                 };
             });
         }

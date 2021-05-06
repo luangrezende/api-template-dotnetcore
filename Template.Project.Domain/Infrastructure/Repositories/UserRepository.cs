@@ -3,7 +3,7 @@ using Template.Project.Domain.RepositoriesContracts.IBase;
 using Template.Project.Domain.Application.Dtos.Requests;
 using Template.Project.Infrastructure.Repositories.Base;
 using Template.Project.Application.CustomExceptions;
-using Template.Project.Domain.Domain.Models;
+using Template.Project.Domain.Domain.Entities;
 using Template.Project.Util.Cryptograph;
 using System.Threading.Tasks;
 
