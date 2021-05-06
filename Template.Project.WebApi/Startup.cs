@@ -37,6 +37,7 @@ namespace Template.Project
                 .AddDbContext<DBContext>(options => options.UseNpgsql(_configuration.GetConnectionString("NoSQL")));
             services.AddServices();
             services.AddRepositories();
+            services.AddProxies();
             services.AddValidations();
             services.AddAutoMapping();
             services.AddCors();
