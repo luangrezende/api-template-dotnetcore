@@ -9,12 +9,12 @@ using System;
 
 namespace Template.Project.Domain.Infrastructure.Proxy
 {
-    public class MailApi : IMailApi
+    public class MailProxy : IMailProxy
     {
         private readonly static HttpClient _httpResponseMessage = new HttpClient();
         private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public MailApi(IHttpContextAccessor httpContextAccessor)
+        public MailProxy(IHttpContextAccessor httpContextAccessor)
         {
             _httpContextAccessor = httpContextAccessor;
         }

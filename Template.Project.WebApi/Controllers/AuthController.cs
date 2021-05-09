@@ -16,16 +16,13 @@ namespace Template.Project.WebApi.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IAuthService _authService;
         private readonly ILogger _logger;
 
         public AuthController(
-            IHttpContextAccessor httpContextAccessor,
             IAuthService authService,
             ILogger<AuthController> logger)
         {
-            _httpContextAccessor = httpContextAccessor;
             _authService = authService;
             _logger = logger;
         }

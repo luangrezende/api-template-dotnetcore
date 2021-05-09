@@ -16,16 +16,13 @@ namespace Template.Project.WebApi.Controllers
     [ApiController]
     public class TemplateController : ControllerBase
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ITemplateService _templateService;
         private readonly ILogger _logger;
 
         public TemplateController(
-            IHttpContextAccessor httpContextAccessor,
             ITemplateService templateService,
             ILogger<TemplateController> logger)
         {
-            _httpContextAccessor = httpContextAccessor;
             _templateService = templateService;
             _logger = logger;
         }

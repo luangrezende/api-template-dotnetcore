@@ -8,7 +8,7 @@ namespace Template.Project.CrossCutting.DI
     {
         public static IServiceCollection AddProxies(this IServiceCollection proxy)
         {
-            proxy.AddScoped<IMailApi, MailApi>();
+            proxy.AddScoped<IMailProxy, MailProxy>();
 
             return proxy;
         }

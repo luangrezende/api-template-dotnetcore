@@ -22,5 +22,10 @@ namespace Template.Project.Util.ConfigErrors
             while (ex != null);
             return sb.ToString();
         }
+
+        public static string GetSimpleDescription(this Exception ex)
+        {
+            return $"Error: {ex.Message} - Details: {ex.InnerException?.Message: 'No details'}";
+        }
     }
 }

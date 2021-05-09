@@ -8,7 +8,7 @@ namespace Template.Project.CrossCutting.AutoMapping
 {
     public static class AutoMapping
     {
-        public static IServiceCollection AddAutoMapping(this IServiceCollection repository)
+        public static IServiceCollection AddAutoMapping(this IServiceCollection serviceDescriptors)
         {
             var config = new MapperConfiguration(cfg =>
             {
@@ -19,9 +19,9 @@ namespace Template.Project.CrossCutting.AutoMapping
             });
 
             IMapper mapper = config.CreateMapper();
-            repository.AddSingleton(mapper);
+            serviceDescriptors.AddSingleton(mapper);
 
-            return repository;
+            return serviceDescriptors;
         }
     }
 }

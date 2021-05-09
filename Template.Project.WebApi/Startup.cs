@@ -32,9 +32,14 @@ namespace Template.Project
         {
             services.AddControllers()
                 .AddFluentValidation();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddEntityFrameworkNpgsql()
+
+            services
+                .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services
+                .AddEntityFrameworkNpgsql()
                 .AddDbContext<DBContext>(options => options.UseNpgsql(_configuration.GetConnectionString("NoSQL")));
+
             services.AddServices();
             services.AddRepositories();
             services.AddProxies();
@@ -42,8 +47,8 @@ namespace Template.Project
             services.AddAutoMapping();
             services.AddCors();
 
-            
-                services.AddSwaggerGen(c =>
+
+            services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
                 {
@@ -51,18 +56,18 @@ namespace Template.Project
                     Title = "Template.Project.WebApi",
                     Description = "API Template",
                     TermsOfService = new Uri("https://example.com/terms"),
-                    //Contact = new OpenApiContact
-                    //{
-                    //    Name = "Contact Name",
-                    //    Email = string.Empty,
-                    //    Url = new Uri("https://example.com"),
-                    //},
-                    //License = new OpenApiLicense
-                    //{
-                    //    Name = "License",
-                    //    Url = new Uri("https://example.com/license"),
-                    //}
-                });
+                        //Contact = new OpenApiContact
+                        //{
+                        //    Name = "Contact Name",
+                        //    Email = string.Empty,
+                        //    Url = new Uri("https://example.com"),
+                        //},
+                        //License = new OpenApiLicense
+                        //{
+                        //    Name = "License",
+                        //    Url = new Uri("https://example.com/license"),
+                        //}
+                    });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -104,6 +109,7 @@ namespace Template.Project
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
