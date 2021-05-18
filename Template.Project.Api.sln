@@ -16,7 +16,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "7.Deployment", "7.Deploymen
 		.dockerignore = .dockerignore
 		Deployment.yml = Deployment.yml
 		Dockerfile = Dockerfile
-		Kong.yml = Kong.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "6.Cloudformation", "6.Cloudformation", "{30BDF531-2841-48E5-B7B2-E7B437BE086A}"
@@ -36,7 +35,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Project.Util", "Te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "5.Tests", "5.Tests", "{EBE66696-D0BE-4671-958B-A409C1BBD7CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Project.Tests", "Template.Project.Tests\Template.Project.Tests.csproj", "{5C1E98C3-4442-4E94-AC43-E847571380AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Project.Tests", "Template.Project.Tests\Template.Project.Tests.csproj", "{5C1E98C3-4442-4E94-AC43-E847571380AF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
