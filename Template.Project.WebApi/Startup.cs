@@ -37,8 +37,8 @@ namespace Template.Project
                 .AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services
-                .AddEntityFrameworkNpgsql()
-                .AddDbContext<DBContext>(options => options.UseNpgsql(_configuration.GetConnectionString("NoSQL")));
+                .AddEntityFrameworkSqlServer()
+                .AddDbContext<DBContext>(options => options.UseSqlServer(_configuration.GetConnectionString("Default")));
 
             services.AddServices();
             services.AddRepositories();
