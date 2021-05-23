@@ -13,11 +13,12 @@ namespace Template.Project.CrossCutting.AutoMapping
             var config = new MapperConfiguration(cfg =>
             {
                 cfg.CreateMap<TemplateEntity, TemplateResponse>().ReverseMap();
-                cfg.CreateMap<UserEntity, UserResponse>().ReverseMap();
+                cfg.CreateMap<TemplateResponse, TemplateResponseUtil>().ReverseMap();
 
+                cfg.CreateMap<UserEntity, UserResponse>().ReverseMap();
                 cfg.CreateMap<UserResponse, UserResponseUtil>().ReverseMap();
             });
-
+            
             IMapper mapper = config.CreateMapper();
             serviceDescriptors.AddSingleton(mapper);
 

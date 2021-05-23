@@ -1,7 +1,6 @@
 ﻿using Template.Project.Domain.Application.Services.Interfaces;
 using Template.Project.Domain.Domain.RepositoriesContracts;
 using Template.Project.Domain.Application.Dtos.Responses;
-using Template.Project.Domain.Application.Dtos.Requests;
 using Microsoft.Extensions.Logging;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -22,10 +21,12 @@ namespace Template.Project.Domain.Application.Services
             _logger = logger;
         }
 
-        public async Task<IEnumerable<TemplateResponse>> GetAllFromTemplateAsync(TemplateReadRequest templateReadRequest)
+        public async Task<IEnumerable<TemplateResponse>> GetAllAsync()
         {
             var template = 
-                await _templateRepository.GetAllFromTemplateAsync(templateReadRequest);
+                await _templateRepository.GetAllAsync();
+
+            _logger.LogInformation("Get all users async");
 
             return _mapper.Map<IEnumerable<TemplateResponse>>(template);
         }

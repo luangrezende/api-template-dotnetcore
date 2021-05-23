@@ -1,6 +1,5 @@
 ﻿using Template.Project.Domain.Application.Services.Interfaces;
 using Template.Project.Domain.Application.Dtos.Responses;
-using Template.Project.Domain.Application.Dtos.Requests;
 using Template.Project.Application.CustomExceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.Extensions.Logging;
@@ -28,18 +27,18 @@ namespace Template.Project.WebApi.Controllers
         }
 
         /// <summary>
-        /// Do something here
+        /// Get all from database
         /// </summary>
-        [HttpPost]
+        [HttpGet]
         [Authorize(Roles = "Admin")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<IEnumerable<TemplateResponse>>> Get([FromQuery] TemplateReadRequest templateReadRequest)
+        public async Task<ActionResult<IEnumerable<TemplateResponse>>> Get()
         {
             try
             {
-                return Ok(await _templateService.GetAllFromTemplateAsync(templateReadRequest));
+                return Ok(await _templateService.GetAllAsync());
             }
             catch (NotFoundException)
             {
@@ -47,7 +46,7 @@ namespace Template.Project.WebApi.Controllers
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Error on Template - GetAllFromTemplateAsync");
+                _logger.LogError(e, "Error on Template Controller - GetAllAsync");
                 return BadRequest(e.Message);
             }
         }

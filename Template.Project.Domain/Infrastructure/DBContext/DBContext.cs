@@ -7,7 +7,6 @@ namespace Template.Project.Infrastructure.DBContext
 {
     public class DBContext : DbContext, ISystemContext
     {
-
         public DBContext(DbContextOptions<DBContext> options) : base(options)
         {
             Db = this;
@@ -19,7 +18,6 @@ namespace Template.Project.Infrastructure.DBContext
         }
 
         public DbContext Db { get; set; }
-
         public DbSet<TemplateEntity> TemplateEntities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
