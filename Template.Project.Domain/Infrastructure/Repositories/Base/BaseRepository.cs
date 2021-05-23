@@ -25,8 +25,8 @@ namespace Template.Project.Infrastructure.Repositories.Base
         {
             _context.Db.Entry(source).State = EntityState.Added;
             _context.Db.Add(source);
-
             _context.Db.SaveChanges();
+
             return await Task.FromResult(source);
         }
 
@@ -36,7 +36,6 @@ namespace Template.Project.Infrastructure.Repositories.Base
             {
                 _context.Db.Entry<T>(item).State = EntityState.Added;
             }
-
             _context.Db.Set<T>().AddRange(source);
 
             await _context.Db.SaveChangesAsync();
@@ -66,8 +65,8 @@ namespace Template.Project.Infrastructure.Repositories.Base
         {
             _context.Db.Entry(source).State = EntityState.Deleted;
             _context.Db.Set<T>().Remove(source);
-
             await _context.Db.SaveChangesAsync();
+
             return await Task.FromResult(source);
         }
 
@@ -97,8 +96,8 @@ namespace Template.Project.Infrastructure.Repositories.Base
         {
             _context.Db.Set<T>().Attach(source);
             _context.Db.Entry(source).State = EntityState.Modified;
-
             await _context.Db.SaveChangesAsync();
+
             return await Task.FromResult(source);
         }
     }
