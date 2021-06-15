@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -22,5 +23,22 @@ namespace Template.Project
             {
                 webBuilder.UseStartup<Startup>();
             });
+
+        //public static void Main(string[] args)
+        //{
+        //    CreateWebHostBuilder(args)
+        //        .Build()
+        //        .MigrateDatabase<DBContext>()
+        //        .Run();
+        //}
+
+        //public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+        //        WebHost.CreateDefaultBuilder(args)
+        //        .ConfigureLogging(logging =>
+        //        {
+        //            logging.AddAWSProvider();
+        //            logging.SetMinimumLevel(LogLevel.Debug);
+        //        })
+        //        .UseStartup<Startup>();
     }
 }
